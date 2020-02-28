@@ -42,7 +42,6 @@ func (c *Connection) Start() {
 	}
 }
 
-
 // 处理conn读数据的goroutine
 func (c *Connection) StartReader() {
 	fmt.Println("Reader Goroutine is running")
