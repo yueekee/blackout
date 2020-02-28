@@ -35,12 +35,7 @@ func (this *PingRouter) PostHandle(request iface.IRequest) {
 }
 
 func main() {
-	server := net.NewServer("testS1")
+	server := net.NewServer()
 	server.AddRouter(&PingRouter{})
 	server.Serve()
 }
-
-
-
-
-

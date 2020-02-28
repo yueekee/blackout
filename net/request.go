@@ -3,8 +3,8 @@ package net
 import "github.com/yueekee/blackout/iface"
 
 type Request struct {
-	conn		iface.IConnection
-	data		[]byte
+	conn iface.IConnection
+	data []byte
 }
 
 func (r *Request) GetConnection() iface.IConnection {

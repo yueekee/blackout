@@ -4,16 +4,17 @@ import (
 	"errors"
 	"fmt"
 	"github.com/yueekee/blackout/iface"
+	"github.com/yueekee/blackout/utils"
 	"net"
 	"time"
 )
 
 type Server struct {
-	Name 		string
-	IPVersion	string		// 网络，tcp/tcp4/tcp6
-	IP			string
-	Port		int
-	Router 		iface.IRouter
+	Name      string
+	IPVersion string // 网络，tcp/tcp4/tcp6
+	IP        string
+	Port      int
+	Router    iface.IRouter
 }
 
 func (s *Server) Start() {
@@ -67,7 +68,7 @@ func CallBackToClient(conn *net.TCPConn, data []byte, cnt int) error {
 }
 
 func (s *Server) Stop() {
-	fmt.Println("[STOP] Server , name " , s.Name)
+	fmt.Println("[STOP] Server , name ", s.Name)
 
 	// TODO Server.Stop() 将其他需要清理的连接信息一并清理掉
 }
@@ -84,15 +85,18 @@ func (s *Server) Serve() {
 
 func (s *Server) AddRouter(router iface.IRouter) {
 	s.Router = router
-	fmt.Println("Add Router success!" )
+	fmt.Println("Add Router success!")
 }
 
-func NewServer(name string) iface.IServer {
+func NewServer() iface.IServer {
+	// 先初始化全局配置文件
+	utils.GlobalObject.Reload()
+
 	return &Server{
-		Name:		name,
-		IPVersion:	"tcp4",
-		IP:			"0.0.0.0",
-		Port:		7777,
-		Router:  	nil,
+		Name:      utils.GlobalObject.Name,
+		IPVersion: "tcp4",
+		IP:        utils.GlobalObject.Host,
+		Port:      utils.GlobalObject.TcpPort,
+		Router:    nil,
 	}
 }

@@ -7,13 +7,12 @@ import (
 )
 
 type Connection struct {
-	Conn			*net.TCPConn
-	ConnID			uint32
-	isClose			bool
-	router 			iface.IRouter
-	ExitBuffChan	chan bool
+	Conn         *net.TCPConn
+	ConnID       uint32
+	isClose      bool
+	router       iface.IRouter
+	ExitBuffChan chan bool
 }
-
 
 func (c *Connection) Stop() {
 	if c.isClose == true {
@@ -25,7 +24,7 @@ func (c *Connection) Stop() {
 	c.Conn.Close()
 
 	// 阻塞缓存队列读数据的业务
-	c.ExitBuffChan <-true
+	c.ExitBuffChan <- true
 	// 关闭该链接全部通道
 	close(c.ExitBuffChan)
 }
@@ -53,14 +52,14 @@ func (c *Connection) StartReader() {
 		_, err := c.Conn.Read(buf)
 		if err != nil {
 			fmt.Println("receive buf err:", err)
-			c.ExitBuffChan <-true
+			c.ExitBuffChan <- true
 			continue
 		}
 
 		// 得到当前客户端请求的Request数据
 		req := Request{
-			conn:	c,
-			data:	buf,
+			conn: c,
+			data: buf,
 		}
 		// 从路由中找到注册绑定conn对应的Handle
 		go func(request iface.IRequest) {
@@ -72,7 +71,7 @@ func (c *Connection) StartReader() {
 	}
 }
 
-func (c *Connection) GetTCPConnection() *net.TCPConn{
+func (c *Connection) GetTCPConnection() *net.TCPConn {
 	return c.Conn
 }
 
@@ -80,7 +79,7 @@ func (c *Connection) GetConnID() uint32 {
 	return c.ConnID
 }
 
-func (c *Connection) RemoteAddr() net.Addr{
+func (c *Connection) RemoteAddr() net.Addr {
 	return c.Conn.RemoteAddr()
 }
 
@@ -89,7 +88,7 @@ func NewConnection(conn *net.TCPConn, connID uint32, router iface.IRouter) *Conn
 		Conn:         conn,
 		ConnID:       connID,
 		isClose:      false,
-		router:		  router,
+		router:       router,
 		ExitBuffChan: make(chan bool, 1),
 	}
 }
