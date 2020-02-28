@@ -1,6 +1,7 @@
 package net
 
 import (
+	"errors"
 	"fmt"
 	"github.com/yueekee/blackout/iface"
 	"net"
@@ -34,36 +35,34 @@ func (s *Server) Start() {
 
 		fmt.Println("start server ", s.Name, " success, now listening...")
 
+		var connID uint32 = 0
 		// 启动server网络连接服务
 		for {
-			conn, err := listener.Accept()
+			conn, err := listener.AcceptTCP()
 			if err != nil {
 				fmt.Println("Accept err ", err)
 				continue
 			}
 
 			// TODO Server.Start() 设置服务器的最大连接次数，若超则关闭新连接
-			// TODO Server.Start() 处理新连接请求的业务方法，handler和conn绑定
 
-			go func() {
-				// 不断地循环从客户端获取数据
-				for {
-					buf := make([]byte, 512)
-					n, err := conn.Read(buf)
-					if err != nil {
-						fmt.Println("receive buf err ", err)
-						continue
-					}
-					// 回显
-					_, err = conn.Write(buf[:n])
-					if err != nil {
-						fmt.Println("write back buf err ", err)
-						continue
-					}
-				}
-			}()
+			// 处理新连接请求的业务方法，将handler和conn绑定
+			connection := NewConnection(conn, connID, CallBackToClient)
+			connID++
+			// 启动当前链接的处理业务
+			go connection.Start()
 		}
 	}()
+}
+
+// 服务器回显的封装api
+func CallBackToClient(conn *net.TCPConn, data []byte, cnt int) error {
+	// 回显
+	if _, err := conn.Write(data[:cnt]); err != nil {
+		fmt.Println("write back buf err ", err)
+		return errors.New("CallBackToClient error")
+	}
+	return nil
 }
 
 func (s *Server) Stop() {

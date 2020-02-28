@@ -14,19 +14,6 @@ type Connection struct {
 	ExitBuffChan	chan bool
 }
 
-func NewConnection(conn *net.TCPConn, connID uint32, callback_api iface.HandFunc) *Connection {
-	return &Connection{
-		Conn: 			conn,
-		ConnID: 		connID,
-		isClose: 		false,
-		handleAPI: 		callback_api,
-		ExitBuffChan: 	make(chan bool, 1),
-	}
-}
-
-func (c *Connection) RemoteAddr() net.Addr{
-	return c.Conn.RemoteAddr()
-}
 
 func (c *Connection) Stop() {
 	if c.isClose == true {
@@ -85,4 +72,18 @@ func (c *Connection) GetTCPConnection() *net.TCPConn{
 
 func (c *Connection) GetConnID() uint32 {
 	return c.ConnID
+}
+
+func (c *Connection) RemoteAddr() net.Addr{
+	return c.Conn.RemoteAddr()
+}
+
+func NewConnection(conn *net.TCPConn, connID uint32, callbackApi iface.HandFunc) *Connection {
+	return &Connection{
+		Conn:         conn,
+		ConnID:       connID,
+		isClose:      false,
+		handleAPI:    callbackApi,
+		ExitBuffChan: make(chan bool, 1),
+	}
 }
