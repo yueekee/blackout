@@ -13,6 +13,7 @@ type Server struct {
 	IPVersion	string		// 网络，tcp/tcp4/tcp6
 	IP			string
 	Port		int
+	Router 		iface.IRouter
 }
 
 func (s *Server) Start() {
@@ -47,7 +48,7 @@ func (s *Server) Start() {
 			// TODO Server.Start() 设置服务器的最大连接次数，若超则关闭新连接
 
 			// 处理新连接请求的业务方法，将handler和conn绑定
-			connection := NewConnection(conn, connID, CallBackToClient)
+			connection := NewConnection(conn, connID, s.Router)
 			connID++
 			// 启动当前链接的处理业务
 			go connection.Start()
@@ -81,11 +82,17 @@ func (s *Server) Serve() {
 	}
 }
 
+func (s *Server) AddRouter(router iface.IRouter) {
+	s.Router = router
+	fmt.Println("Add Router success!" )
+}
+
 func NewServer(name string) iface.IServer {
 	return &Server{
 		Name:		name,
 		IPVersion:	"tcp4",
 		IP:			"0.0.0.0",
 		Port:		7777,
+		Router:  	nil,
 	}
 }

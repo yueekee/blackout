@@ -10,7 +10,7 @@ type Connection struct {
 	Conn			*net.TCPConn
 	ConnID			uint32
 	isClose			bool
-	handleAPI		iface.HandFunc
+	router 			iface.IRouter
 	ExitBuffChan	chan bool
 }
 
@@ -50,18 +50,25 @@ func (c *Connection) StartReader() {
 
 	for {
 		buf := make([]byte, 512)
-		n, err := c.Conn.Read(buf)
+		_, err := c.Conn.Read(buf)
 		if err != nil {
 			fmt.Println("receive buf err:", err)
 			c.ExitBuffChan <-true
 			continue
 		}
 
-		if err := c.handleAPI(c.Conn, buf, n); err != nil {
-			fmt.Println("connID", c.ConnID, "handle err")
-			c.ExitBuffChan <-true
-			return
+		// 得到当前客户端请求的Request数据
+		req := Request{
+			conn:	c,
+			data:	buf,
 		}
+		// 从路由中找到注册绑定conn对应的Handle
+		go func(request iface.IRequest) {
+			// 执行注册的路由方法
+			c.router.PreHandle(request)
+			c.router.Handle(request)
+			c.router.PostHandle(request)
+		}(&req)
 	}
 }
 
@@ -77,12 +84,12 @@ func (c *Connection) RemoteAddr() net.Addr{
 	return c.Conn.RemoteAddr()
 }
 
-func NewConnection(conn *net.TCPConn, connID uint32, callbackApi iface.HandFunc) *Connection {
+func NewConnection(conn *net.TCPConn, connID uint32, router iface.IRouter) *Connection {
 	return &Connection{
 		Conn:         conn,
 		ConnID:       connID,
 		isClose:      false,
-		handleAPI:    callbackApi,
+		router:		  router,
 		ExitBuffChan: make(chan bool, 1),
 	}
 }
