@@ -4,7 +4,7 @@ import "github.com/yueekee/blackout/iface"
 
 type Request struct {
 	conn iface.IConnection
-	data []byte
+	msg  iface.IMessage
 }
 
 func (r *Request) GetConnection() iface.IConnection {
@@ -12,5 +12,9 @@ func (r *Request) GetConnection() iface.IConnection {
 }
 
 func (r *Request) GetData() []byte {
-	return r.data
+	return r.msg.GetData()
+}
+
+func (r *Request) GetMsgID() uint32 {
+	return r.msg.GetMsgID()
 }
