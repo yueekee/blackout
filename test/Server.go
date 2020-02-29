@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/yueekee/blackout/iface"
-	"github.com/yueekee/blackout/net"
+	"github.com/yueekee/blackout/inet"
 )
 
 type PingRouter struct {
-	net.BaseRouter
+	inet.BaseRouter
 }
 
 func (this *PingRouter) PreHandle(request iface.IRequest) {
@@ -35,7 +35,7 @@ func (this *PingRouter) PostHandle(request iface.IRequest) {
 }
 
 func main() {
-	server := net.NewServer()
+	server := inet.NewServer()
 	server.AddRouter(&PingRouter{})
 	server.Serve()
 }

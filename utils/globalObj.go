@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/yueekee/blackout/iface"
 	"io/ioutil"
 )
@@ -34,12 +33,12 @@ func init() {
 
 // 读取用户的配置文件
 func (g *GlobalObj) Reload() {
-	data, err := ioutil.ReadFile("../conf/config.json")
+	data, err := ioutil.ReadFile("./conf/config.json")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("json :%s\n", data)
+	//fmt.Printf("json :%s\n", data)
 	e := json.Unmarshal(data, &GlobalObject)
 	if e != nil {
 		panic(e)

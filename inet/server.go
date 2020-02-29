@@ -1,4 +1,4 @@
-package net
+package inet
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 
 type Server struct {
 	Name      string
-	IPVersion string // 网络，tcp/tcp4/tcp6
+	IPVersion string 		// 网络，tcp/tcp4/tcp6
 	IP        string
 	Port      int
 	Router    iface.IRouter

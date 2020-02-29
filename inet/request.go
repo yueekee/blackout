@@ -1,4 +1,4 @@
-package net
+package inet
 
 import "github.com/yueekee/blackout/iface"
 

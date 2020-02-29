@@ -1,9 +1,8 @@
-package net
+package inet
 
 import "github.com/yueekee/blackout/iface"
 
-type BaseRouter struct {
-}
+type BaseRouter struct {}
 
 func (br *BaseRouter) PreHandle(req iface.IRequest)  {}
 func (br *BaseRouter) Handle(req iface.IRequest)     {}
