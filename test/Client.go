@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/yueekee/blackout/inet"
+	"github.com/liankui/blackout/inet"
 	"io"
 	"net"
 	"time"

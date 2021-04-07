@@ -3,8 +3,8 @@ package inet
 import (
 	"errors"
 	"fmt"
-	"github.com/yueekee/blackout/iface"
-	"github.com/yueekee/blackout/utils"
+	"github.com/liankui/blackout/iface"
+	"github.com/liankui/blackout/utils"
 	"net"
 	"time"
 )

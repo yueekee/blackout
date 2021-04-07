@@ -1,6 +1,6 @@
 package inet
 
-import "github.com/yueekee/blackout/iface"
+import "github.com/liankui/blackout/iface"
 
 type Request struct {
 	conn iface.IConnection

@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/yueekee/blackout/utils"
+	"github.com/liankui/blackout/utils"
 	"io/ioutil"
 )
 

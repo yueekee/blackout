@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/yueekee/blackout/iface"
+	"github.com/liankui/blackout/iface"
 	"io/ioutil"
 )
 
